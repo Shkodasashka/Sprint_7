@@ -9,25 +9,24 @@ from data import CourierData
 class TestCreateCourier:
     @allure.title('Проверка создания нового курьера')
     @allure.description('Проверка создания нового курьера при передаче в ручку /api/v1/courier логина, пароля и имени')
-    def test_success_create_courier(self):
-        create_courier_request = CourierApi.create_courier(Createnewcourier.create_new_courier())
+    def test_success_create_courier(self, create_courier_data):
+        create_courier_request = CourierApi.create_courier(create_courier_data)
         assert (create_courier_request.status_code == 201 and
                 str(create_courier_request.json()['ok']) == 'True')
 
     @allure.title('Проверка невозможности создания двух курьеров с одинаковыми параметрами')
     @allure.description('Проверка невозможности создания двух курьеров при передаче в ручку /api/v1/courier одинаковых логина, пароля и имени')
-    def test_unsuccess_create_two_identical_couriers(self):
-        first_courier = Createnewcourier.create_new_courier()
-        create_courier_request = CourierApi.create_courier(first_courier)
-        create_courier_request_2 = CourierApi.create_courier(first_courier)
+    def test_unsuccess_create_two_identical_couriers(self, create_courier_data):
+        create_courier_request = CourierApi.create_courier(create_courier_data)
+        create_courier_request_2 = CourierApi.create_courier(create_courier_data)
         assert (create_courier_request_2.status_code == 409 and
                 create_courier_request_2.json()['message'] == "Этот логин уже используется")
 
     @allure.title('Проверка невозможности создания курьера без обязательного поля')
     @allure.description('Проверка невозможности создания курьера при не передаче в ручку /api/v1/courier логина, пароля или имени')
     @pytest.mark.parametrize("param", ["login", "password", "firstName"])
-    def test_unsuccess_create_couriers_without_required_param(self, param):
-        data_courier = ChangeTestData.change_data_field_on_empty(Createnewcourier.create_new_courier(), param)
+    def test_unsuccess_create_couriers_without_required_param(self, param, create_courier_data):
+        data_courier = ChangeTestData.change_data_field_on_empty(create_courier_data, param)
         create_courier_request = CourierApi.create_courier(data_courier)
         assert (create_courier_request.status_code == 400 and
                 create_courier_request.json()['message'] == "Недостаточно данных для создания учетной записи")
