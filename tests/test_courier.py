@@ -2,11 +2,11 @@ import allure
 import pytest
 
 from api.courier_api import CourierApi
-from helper import Createnewcourier
+from helper import Createnewcourier, ChangeTestData
 from data import CourierData
 
 
-class TestCourier:
+class TestCreateCourier:
     @allure.title('Проверка создания нового курьера')
     @allure.description('Проверка создания нового курьера при передаче в ручку /api/v1/courier логина, пароля и имени')
     def test_success_create_courier(self):
@@ -19,17 +19,16 @@ class TestCourier:
     def test_unsuccess_create_two_identical_couriers(self):
         first_courier = Createnewcourier.create_new_courier()
         create_courier_request = CourierApi.create_courier(first_courier)
-        create_courier_request_2 = CourierApi.create_courier(first_courier)       
+        create_courier_request_2 = CourierApi.create_courier(first_courier)
         assert (create_courier_request_2.status_code == 409 and
                 create_courier_request_2.json()['message'] == "Этот логин уже используется")
 
     @allure.title('Проверка невозможности создания курьера без обязательного поля')
     @allure.description('Проверка невозможности создания курьера при не передаче в ручку /api/v1/courier логина, пароля или имени')
-    @pytest.mark.parametrize('param', ["login", "password", "firstName"])
+    @pytest.mark.parametrize("param", ["login", "password", "firstName"])
     def test_unsuccess_create_couriers_without_required_param(self, param):
-        data_courier = Createnewcourier.create_new_courier()
-        data_courier[param] = ''
-        create_courier_request = CourierApi.create_courier(data_courier)    
+        data_courier = ChangeTestData.change_data_field_on_empty(Createnewcourier.create_new_courier(), param)
+        create_courier_request = CourierApi.create_courier(data_courier)
         assert (create_courier_request.status_code == 400 and
                 create_courier_request.json()['message'] == "Недостаточно данных для создания учетной записи")
 
@@ -44,6 +43,8 @@ class TestCourier:
         assert (create_courier_request_2.status_code == 409 and
                 create_courier_request_2.json()['message'] == "Этот логин уже используется")
 
+
+class TestLoginCourier:
     @allure.title('Проверка авторизации курьера в системе')
     @allure.description('Проверка авторизации курьера при передаче в ручку /api/v1/courier/login зарегестированных логина и пароля')
     def test_success_login_courier(self):
@@ -55,8 +56,7 @@ class TestCourier:
     @allure.description('Проверка невозможности авторизации курьера при не передаче в ручку /api/v1/courier логина или пароля')
     @pytest.mark.parametrize('param', ['login', 'password'])
     def test_unsuccess_login_courier_without_required_param(self, param):
-        data_courier = CourierData.login_courier_body
-        data_courier[param] = ''
+        data_courier = ChangeTestData.change_data_field_on_empty(CourierData.login_courier_body, param)
         login_courier_request = CourierApi.login_courier(data_courier)
         assert (login_courier_request.status_code == 400 and
                 login_courier_request.json()['message'] == "Недостаточно данных для входа")
@@ -65,8 +65,7 @@ class TestCourier:
     @allure.description('Проверка невозможности авторизации курьера при передаче в ручку /api/v1/courier логина или пароля с ошибкой')
     @pytest.mark.parametrize('param', ['login', 'password'])
     def test_unsuccess_login_courier_with_mistake_in_field(self, param):
-        data_courier = CourierData.login_courier_body
-        data_courier[param] = str(data_courier[param]) + '4'
+        data_courier = ChangeTestData.input_mistake_in_field_of_registred_user(CourierData.login_courier_body, param)
         login_courier_request = CourierApi.login_courier(data_courier)
         assert (login_courier_request.status_code == 404 and
                 login_courier_request.json()['message'] == "Учетная запись не найдена") 
