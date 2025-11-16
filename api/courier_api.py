@@ -21,3 +21,8 @@ class OrderApi:
     @allure.step('Отправка запроса на создание заказа')
     def create_order(body):
         return requests.post(Url.create_order, json=body)
+
+    @staticmethod
+    @allure.step('Отправка запроса на получение списка заказов')
+    def get_list_order():
+        return requests.get(Url.create_order)
