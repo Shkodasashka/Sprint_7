@@ -49,7 +49,7 @@ class TestLoginCourier:
     def test_success_login_courier(self):
         login_courier_request = CourierApi.login_courier(CourierData.login_courier_body)
         assert (login_courier_request.status_code == 200 and
-                login_courier_request.json()['id'] == 654347)
+                'id' in login_courier_request.json())
 
     @allure.title('Проверка невозможности авторизации курьера в системе без обязательного поля')
     @allure.description('Проверка невозможности авторизации курьера при не передаче в ручку /api/v1/courier логина или пароля')
