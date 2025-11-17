@@ -16,8 +16,6 @@ class CourierData:
     response_message_after_unsuccess_login_courier_with_unregistred_data = "Учетная запись не найдена"
 
 
-
-
 class OrderData:
     order_body = {
         "firstName": "Naruto",

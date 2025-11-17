@@ -14,10 +14,9 @@ def create_courier_data():
 def register_and_cleanup_courier():
     courier_data = Createnewcourier.create_new_courier()
     create_response = CourierApi.create_courier(courier_data)
-    assert create_response.status_code == 201
+    assert (create_response.status_code == 201)
     yield courier_data
-    courier_id = CourierApi.get_courier_id(
-        {"login": courier_data['login'], "password": courier_data['password']}
-    )
+    courier_id = CourierApi.login_courier({"login": courier_data['login'], "password": courier_data['password']}).json().get('id')
+    assert courier_id is not None
     delete_response = CourierApi.delete_courier(courier_id)
     assert delete_response.status_code == 200

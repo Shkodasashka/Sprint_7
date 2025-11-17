@@ -3,3 +3,4 @@ class Url:
     create_courier = f'{mane_site}/api/v1/courier'
     login_courier = f'{mane_site}/api/v1/courier/login'
     create_order = f'{mane_site}/api/v1/orders'
+    delete_courier = f'{mane_site}/api/v1/courier/'
