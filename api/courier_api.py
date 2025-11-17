@@ -15,6 +15,20 @@ class CourierApi:
     def login_courier(body):
         return requests.post(Url.login_courier, json=body)
 
+    @staticmethod
+    @allure.step('Отправка запроса на удаление курьера из системы')
+    def delete_courier(courier_id):
+        return requests.delete(f"{Url.delete_courier}{courier_id}")
+
+    @staticmethod
+    @allure.step('Отправка запроса на получение ID курьера после логина')
+    def get_courier_id(login_data):
+        response = CourierApi.login_courier(login_data)
+        if response.status_code == 200:
+            return response.json().get('id')
+        return None
+
+
 
 class OrderApi:
     @staticmethod

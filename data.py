@@ -7,6 +7,15 @@ class CourierData:
         "login": "shufel",
         "password": "1997"
     }
+    response_success_create_courier = {
+        "ok": True
+    }
+    response_message_after_unsuccess_create_courier_with_registered_login = "Этот логин уже используется"
+    response_message_after_unsuccess_create_courier_without_param = "Недостаточно данных для создания учетной записи"
+    response_message_after_unsuccess_login_courier_without_param = "Недостаточно данных для входа"
+    response_message_after_unsuccess_login_courier_with_unregistred_data = "Учетная запись не найдена"
+
+
 
 
 class OrderData:

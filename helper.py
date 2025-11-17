@@ -43,3 +43,10 @@ class ChangeTestData:
         data = testdata.copy()
         data[key] = value
         return data
+
+    @staticmethod
+    @allure.step('Генерация новых данных курьера с использованием логина уже зарегестрированного')
+    def create_data_with_existing_login(existing_login):
+        new_data = Createnewcourier.create_new_courier()
+        new_data['login'] = existing_login
+        return new_data
